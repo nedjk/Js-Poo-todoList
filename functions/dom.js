@@ -20,3 +20,11 @@ export function createElementByTagName(tagName, attributes = {}, text = undefine
         
         return newElement
 }
+/**
+ * 
+ * @param {String} id 
+ * @returns {DocumentFragment}
+ */
+export function cloneTemplate(id) {
+    return document.querySelector(id).content.cloneNode(true)
+}

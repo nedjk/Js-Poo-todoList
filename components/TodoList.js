@@ -1,4 +1,5 @@
 import { TodoListItem } from './TodoListItem.js'
+import { cloneTemplate } from './../functions/dom.js'
 
 export class TodoList {
 
@@ -23,22 +24,7 @@ export class TodoList {
      * @param {HTMLElement} element 
      */
     appendTo (element) {
-        element.innerHTML = `
-        <form class="d-flex pb-4">
-            <input required="" class="form-control" type="text" placeholder="Acheter des patates..." name="title" data-com.bitwarden.browser.user-edited="yes">
-            <button class="btn btn-primary">Ajouter</button>
-        </form>
-        <main>
-            <div class="btn-group mb-4" role="group">
-                <button type="button" class=" btn btn-outline-primary active" data-filter="all">Toutes</button>
-                <button type="button" class=" btn btn-outline-primary" data-filter="todo">A faire</button>
-                <button type="button" class=" btn btn-outline-primary" data-filter="done">Faites</button>
-            </div>
-
-            <ul class="list-group">
-
-            </ul>
-        </main>`
+        element.append(cloneTemplate('#todolist-layout'))
         this.#listElement = element.querySelector('.list-group')
         this.#todos.forEach(todo => {
             const task = new TodoListItem(todo)
@@ -82,7 +68,6 @@ export class TodoList {
     #toggleFilter(event) {
         event.preventDefault()
         const filter = event.target.getAttribute('data-filter')
-        console.warn(event.target)
         event.target.parentElement.querySelector('.active').classList.remove('active')
         event.target.classList.add('active')
 

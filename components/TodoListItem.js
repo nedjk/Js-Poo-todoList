@@ -1,4 +1,4 @@
-import { createElementByTagName } from './../functions/dom.js'
+import { cloneTemplate } from './../functions/dom.js'
 
 /**
  * @typedef {object} Todo
@@ -16,38 +16,24 @@ export  class TodoListItem {
         this.#id = id
         this.#title = title
         this.#completed = completed
-
-        const li = createElementByTagName('li', {
-            class : "todo list-group-item d-flex align-items-center" + (this.#completed ? ' is-completed' : '') 
-        })
-
-        const checkbox = createElementByTagName('input' , {
-            type : 'checkbox',
-            id : `todo-${this.#id}`,
-            class : 'form-check-input',
-            checked : this.#completed ? '' : null
-        })
-
-        const label = createElementByTagName('label',{
-            class : "ms-2 me-auto form-check-label",
-            for : `todo-${this.#id}`
-        },this.#title)
-
-        const iconBean = createElementByTagName('i' , {
-            class : 'bi-trash'
-        })
-        
-        const labelBean = createElementByTagName('label' , {
-            class : 'btn btn-danger btn-sm'
-        })
-
-        labelBean.append(iconBean)
-        li.append(checkbox,label,labelBean)
-
-        labelBean.addEventListener('click', (event) =>{this.remove(event)})
-        checkbox.addEventListener('change', e => this.toggle(e.currentTarget))
-
+        const li = cloneTemplate('#todolist-item').firstElementChild
         this.#element = li
+
+        if(this.#completed) {
+            li.classList.add('is-completed')
+       }
+       const checkbox = li.querySelector('input')
+       checkbox.setAttribute('id', id)
+       if(this.#completed) {
+            checkbox.setAttribute('checked', '')
+       }
+       const label = li.querySelector('label')
+       label.setAttribute('for', id)
+       label.innerText = title
+       const button = li.querySelector('.btn')
+
+        button.addEventListener('click', (event) =>{this.remove(event)})
+        checkbox.addEventListener('change', e => this.toggle(e.currentTarget))
     }
 
     /**
@@ -69,7 +55,6 @@ export  class TodoListItem {
      * @param {HTMLInputElement} target 
      */
     toggle(input) {
-        console.log(input.parentElement.parentElement)
         input.parentElement.classList.toggle('is-completed')
     }
 }
